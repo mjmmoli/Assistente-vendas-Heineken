@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copiloto de Vendas Heineken · Jana Morais</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --black: #0a0a0a;
+    --green: #00A651;
+    --green-dim: #007a3c;
+    --green-faint: #00a65112;
+    --silver: #b0b8c1;
+    --white: #f4f6f4;
+    --card: #111411;
+    --border: #1e261e;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--green); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  nav .logo { font-family: var(--mono); font-size: 0.8rem; color: var(--silver); letter-spacing: 0.08em; }
+  nav .back { font-family: var(--mono); font-size: 0.75rem; color: var(--silver); border: 1px solid var(--border); padding: 0.35rem 0.8rem; border-radius: 4px; transition: border-color 0.2s; }
+  nav .back:hover { border-color: var(--green); color: var(--green); text-decoration: none; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 5rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--green);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--green);
+  }
+  .hero .lead {
+    font-size: 1.1rem;
+    color: var(--silver);
+    max-width: 640px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    border: 1px solid var(--border);
+    color: var(--silver);
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+  }
+  .tag.highlight {
+    border-color: var(--green-dim);
+    color: var(--green);
+    background: var(--green-faint);
+  }
+
+  /* ── METRICS BAR ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 auto 5rem;
+    max-width: 900px;
+  }
+  .metric {
+    background: var(--card);
+    padding: 1.5rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .metric .val {
+    font-family: var(--mono);
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--green);
+    line-height: 1;
+  }
+  .metric .lbl {
+    font-size: 0.75rem;
+    color: var(--silver);
+    line-height: 1.4;
+  }
+
+  /* ── SECTIONS ── */
+  section { max-width: 900px; margin: 0 auto; padding: 0 2rem 5rem; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-left: 2px solid var(--green);
+    padding-left: 0.8rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-bottom: 1rem;
+  }
+
+  p { color: var(--silver); margin-bottom: 1rem; }
+  p strong { color: var(--white); font-weight: 500; }
+
+  /* ── PROBLEM / SOLUTION SPLIT ── */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .split-cell { background: var(--card); padding: 2rem; }
+  .split-cell .cell-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--silver);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .split-cell ul { list-style: none; }
+  .split-cell ul li {
+    color: var(--silver);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .split-cell ul li:last-child { border-bottom: none; }
+  .split-cell ul li::before { content: '↳'; color: var(--green); font-size: 0.75rem; margin-top: 0.15rem; flex-shrink: 0; }
+
+  /* ── PRINCIPLES ── */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .principle {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .principle:hover { border-color: var(--green-dim); }
+  .principle .icon { font-size: 1.4rem; margin-bottom: 0.8rem; }
+  .principle h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .principle p { font-size: 0.82rem; margin: 0; }
+
+  /* ── PROMPT COMPARE ── */
+  .prompt-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .prompt-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .prompt-box .pb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    background: #0d100d;
+  }
+  .prompt-box .pb-header .pb-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--silver);
+    letter-spacing: 0.06em;
+  }
+  .prompt-box .pb-header .pb-badge {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+  }
+  .pb-badge.before { background: #2a1a1a; color: #e06060; border: 1px solid #4a2a2a; }
+  .pb-badge.after { background: var(--green-faint); color: var(--green); border: 1px solid var(--green-dim); }
+  .prompt-box pre {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--silver);
+    padding: 1.2rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-box pre .hl { color: var(--green); }
+  .prompt-box pre .dim { color: #555; }
+
+  /* ── CASE STUDY ── */
+  .case-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .case-header {
+    padding: 1.2rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+    background: #0d100d;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .case-header .ch-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--silver);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .case-header .ch-name {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--green);
+  }
+  .case-body { padding: 1.8rem; }
+  .case-body .context-block {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--silver);
+    background: #0d100d;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+  }
+  .context-block .ck { color: var(--green); }
+  .context-block .cv { color: var(--white); }
+  .context-block .inact { color: #e06060; }
+  .observation {
+    background: #1a1a10;
+    border: 1px solid #3a3a20;
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: 0.85rem;
+    color: #d4cc80;
+    margin-bottom: 1.5rem;
+  }
+  .observation .obs-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a09050;
+    margin-bottom: 0.4rem;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .result-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    background: #0d100d;
+  }
+  .result-item .ri-status {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+  .result-item .ri-text { font-size: 0.82rem; color: var(--silver); line-height: 1.5; }
+
+  /* ── MESSAGES ── */
+  .messages { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+  .msg {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+  }
+  .msg .msg-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--silver);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .msg .msg-text { font-size: 0.92rem; color: var(--white); line-height: 1.65; font-style: italic; }
+  .msg .msg-text em { font-style: normal; color: var(--green); }
+
+  /* ── LEARNINGS ── */
+  .learnings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .learning {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .learning .l-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--green);
+    margin-bottom: 0.6rem;
+  }
+  .learning h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .learning p { font-size: 0.82rem; margin: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--silver);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  footer a { color: var(--green); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .split, .prompt-compare { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.2rem; }
+    .hero { padding: 3rem 1.2rem 2.5rem; }
+    section { padding: 0 1.2rem 3.5rem; }
+    .metrics { margin: 0 1.2rem 3.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">jana morais · portfólio</span>
+  <a class="back" href="https://mjmmoli.github.io/">← voltar</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">Prompt Engineering · ERP/CRM Integration · IA Aplicada</div>
+  <h1>Copiloto de Vendas <em>Heineken</em></h1>
+  <p class="lead">
+    Assistente de IA que age como co-piloto do representante comercial durante visitas a pontos de venda.
+    Argumenta por <strong>margem e giro</strong> — nunca por desconto — usando dados reais do ERP/CRM para personalizar cada visita.
+  </p>
+  <div class="tags">
+    <span class="tag highlight">Prompt Engineering</span>
+    <span class="tag highlight">Anti-hallucination</span>
+    <span class="tag highlight">ERP/CRM Integration</span>
+    <span class="tag">UX de IA</span>
+    <span class="tag">Bootcamp Heineken · DIO</span>
+    <span class="tag">2026</span>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="metric">
+    <span class="val">2</span>
+    <span class="lbl">versões de prompt<br>(simples + integrada ERP)</span>
+  </div>
+  <div class="metric">
+    <span class="val">7</span>
+    <span class="lbl">seções estruturadas<br>por resposta do assistente</span>
+  </div>
+  <div class="metric">
+    <span class="val">15</span>
+    <span class="lbl">campos do contexto PDV<br>mapeados com regras</span>
+  </div>
+  <div class="metric">
+    <span class="val">1</span>
+    <span class="lbl">caso real validado<br>(Bar do Babu)</span>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section>
+  <div class="section-label">01 · Problema</div>
+  <h2>O representante visita dezenas de PDVs por dia — sem contexto</h2>
+  <p>Representantes comerciais chegam a bares, restaurantes e mercados sem saber o que o cliente comprou, por que parou de comprar ou qual produto faz sentido para aquele público. A tentação é sempre oferecer desconto. O resultado: margem menor, cliente não convencido.</p>
+
+  <div class="split">
+    <div class="split-cell">
+      <div class="cell-label">Sem o assistente</div>
+      <ul>
+        <li>Pitch genérico sem histórico do PDV</li>
+        <li>Desconto como primeiro argumento</li>
+        <li>Cooler da concorrente invisível na visita</li>
+        <li>Cliente inativo tratado como PDV novo</li>
+        <li>Dados de preço e estoque inventados na hora</li>
+      </ul>
+    </div>
+    <div class="split-cell">
+      <div class="cell-label">Com o assistente</div>
+      <ul>
+        <li>Briefing automático antes da conversa</li>
+        <li>Argumento de margem por garrafa e giro</li>
+        <li>Alerta de execução em tempo real</li>
+        <li>Modo Recuperação para clientes inativos</li>
+        <li>Anti-alucinação: dado vazio vira "confirmar"</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PRINCÍPIOS -->
+<section>
+  <div class="section-label">02 · Princípios de design</div>
+  <h2>Quatro decisões que definem o comportamento</h2>
+  <div class="principles">
+    <div class="principle">
+      <div class="icon">📊</div>
+      <h3>Margem acima de desconto</h3>
+      <p>O assistente argumenta sempre por lucro por garrafa e giro de público. Desconto só entra se autorizado no ERP.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">🔒</div>
+      <h3>Anti-alucinação em dados duros</h3>
+      <p>Preço, estoque, desconto e disponibilidade vêm do sistema. Campo vazio vira "confirmar na visita" — nunca um palpite.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">📱</div>
+      <h3>Desenhado para o campo</h3>
+      <p>Respostas curtas, prontas para falar ou mandar no WhatsApp. Funciona offline com contexto pré-carregado na manhã.</p>
+    </div>
+    <div class="principle">
+      <div class="icon">🎯</div>
+      <h3>Observação ao vivo prevalece</h3>
+      <p>Se o representante vê algo diferente do sistema (ex.: cooler abastecido com concorrente), essa observação tem prioridade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROMPT ANTES / DEPOIS -->
+<section>
+  <div class="section-label">03 · Engenharia de prompt</div>
+  <h2>Da entrada genérica ao contexto estruturado</h2>
+  <p>A versão simples funciona com entrada manual. A versão integrada recebe um bloco <code style="font-family:var(--mono);font-size:0.8rem;color:var(--green);background:var(--green-faint);padding:0.1em 0.4em;border-radius:3px">&lt;contexto_pdv&gt;</code> montado automaticamente pelo backend antes de cada visita.</p>
+
+  <div class="prompt-compare">
+    <div class="prompt-box">
+      <div class="pb-header">
+        <span class="pb-title">versão simples</span>
+        <span class="pb-badge before">entrada manual</span>
+      </div>
+      <pre><span class="dim">/* representante digita: */</span>
+
+<span class="hl">situação:</span> "Bar premium que só
+compra marca popular, objeção
+de preço"
+
+<span class="dim">→ assistente assume cenário
+e trabalha com hipóteses,
+deixando claro o que assumiu</span></pre>
+    </div>
+    <div class="prompt-box">
+      <div class="pb-header">
+        <span class="pb-title">versão integrada ERP/CRM</span>
+        <span class="pb-badge after">injeção automática</span>
+      </div>
+      <pre><span class="hl">&lt;contexto_pdv&gt;</span>
+pdv_nome: Bar do Babu
+perfil_publico: adulto 30–45
+mix_heineken_atual: <span class="hl">nenhum</span>
+tendencia_volume: <span class="hl">inativo 7m</span>
+desconto_permitido: até 5%
+objecao_recente: "encalhou"
+<span class="hl">&lt;/contexto_pdv&gt;</span>
+
+<span class="dim">→ assistente usa dados reais,
+não pergunta o que o sistema
+já sabe, entra em modo
+Recuperação automaticamente</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- CASO REAL -->
+<section>
+  <div class="section-label">04 · Caso validado</div>
+  <h2>Bar do Babu — recuperação de cliente inativo</h2>
+  <p>Teste escolhido de propósito: cliente que parou de comprar Heineken, com observação ao vivo que conflita com o dado do sistema. Dois comportamentos críticos validados.</p>
+
+  <div class="case-box">
+    <div class="case-header">
+      <span class="ch-label">entrada do sistema</span>
+      <span class="ch-name">Bar do Babu · happy hour · adulto 30-45</span>
+    </div>
+    <div class="case-body">
+      <pre class="context-block"><span class="ck">historico_pedidos:</span>  <span class="cv">set/25: Heineken LN 10cx + popular lata 40cx</span>
+                    <span class="cv">out/25: Heineken LN 6cx + popular lata 42cx</span>
+                    <span class="inact">nov/25: popular lata 45cx (sem Heineken)</span>
+                    <span class="inact">dez/25 a mai/26: só popular lata</span>
+<span class="ck">tendencia_volume:</span>   <span class="inact">Heineken inativa há ~7 meses; volume geral estável</span>
+<span class="ck">desconto_permitido:</span> <span class="cv">até 5% (autorizado p/ reativação)</span>
+<span class="ck">promocao_vigente:</span>   <span class="cv">combo reativação LN — 1cx bônus a cada 10cx</span>
+<span class="ck">objecao_recente:</span>    <span class="cv">out/25 — "long neck encalhou, saiu menos que esperava"</span></pre>
+
+      <div class="observation">
+        <div class="obs-label">⚠ Observação ao vivo do representante</div>
+        "Cheguei aqui e o cooler Heineken tá ligado, mas tá abastecido com a lata popular dele. Não tem nenhuma Heineken dentro."
+      </div>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="ri-status">✓ Modo Recuperação</div>
+          <div class="ri-text">Disparou sozinho ao detectar inatividade. Reconstruiu a história pelo histórico com datas — não tratou como PDV novo.</div>
+        </div>
+        <div class="result-item">
+          <div class="ri-status">✓ Conflito de dados</div>
+          <div class="ri-text">Sistema dizia "tem cooler". Representante viu: abastecido com concorrente. O assistente priorizou a observação ao vivo.</div>
+        </div>
+        <div class="result-item">
+          <div class="ri-status">✓ Anti-alucinação</div>
+          <div class="ri-text">preco_tabela veio indisponível. Nenhum valor foi inventado — desconto e promoção (preenchidos) foram usados normalmente.</div>
+        </div>
+        <div class="result-item">
+          <div class="ri-status">✓ Ativos e metas</div>
+          <div class="ri-text">Não ofereceu cooler (já tem). Considerou meta de indústria (mix premium + cooler abastecido pela Heineken).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENSAGENS -->
+<section>
+  <div class="section-label">05 · Output gerado</div>
+  <h2>Mensagens prontas para o representante usar</h2>
+  <p>O assistente entrega três mensagens calibradas ao perfil do PDV e à objeção registrada — sem inventar preços, prazos ou estoque.</p>
+
+  <div class="messages">
+    <div class="msg">
+      <div class="msg-label">Abertura · visita presencial</div>
+      <div class="msg-text">"Babu, reparei que sua <em>Heineken parou em outubro</em>. Não vim te empurrar caixa — vim entender por que encalhou e <em>voltar de um jeito que ela gire de verdade</em>."</div>
+    </div>
+    <div class="msg">
+      <div class="msg-label">Contorno da objeção · "encalhou"</div>
+      <div class="msg-text">"Encalhou porque <em>veio caixa demais</em> e o cooler tava cheio da lata. Vamos fazer o contrário: <em>menos caixa, Heineken visível e gelada no cooler dela</em>, e com o bônus que tá rolando agora. Se não girar como combinamos, a gente reavalia."</div>
+    </div>
+    <div class="msg">
+      <div class="msg-label">Follow-up · WhatsApp do PDV</div>
+      <div class="msg-text">"Fala, Babu! Como combinei, te montei o <em>retorno enxuto da Heineken com o bônus de reativação</em>. Passo amanhã pra deixar o cooler arrumado certinho. Fechado?"</div>
+    </div>
+  </div>
+</section>
+
+<!-- APRENDIZADOS -->
+<section>
+  <div class="section-label">06 · Aprendizados técnicos</div>
+  <h2>O que o teste revelou para a integração</h2>
+
+  <div class="learnings">
+    <div class="learning">
+      <div class="l-num">aprendizado 01</div>
+      <h3>Datas por pedido, não totais</h3>
+      <p>A frase "parou em outubro" só foi possível porque o histórico veio com datas por pedido. Totais agregados eliminam a personalização.</p>
+    </div>
+    <div class="learning">
+      <div class="l-num">aprendizado 02</div>
+      <h3>indisponível ≠ valor padrão</h3>
+      <p>Campo sem dado vira pergunta do assistente. Campo com valor zero vira "zero" — o sistema precisa distinguir os dois para não confundir o modelo.</p>
+    </div>
+    <div class="learning">
+      <div class="l-num">aprendizado 03</div>
+      <h3>Tendência separada por SKU</h3>
+      <p>O PDV pode estar ativo no volume geral e inativo em Heineken. Calcular as duas curvas separadas é o que aciona o modo Recuperação correto.</p>
+    </div>
+    <div class="learning">
+      <div class="l-num">aprendizado 04</div>
+      <h3>Dados sensíveis só server-side</h3>
+      <p>Preço, desconto e financeiro nunca vêm do app — sempre resolvidos no backend por PDV + representante autenticados, sem cache além da vigência.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Mirna Janaina M. Morais de Oliveira · <a href="https://mjmmoli.github.io/">mjmmoli.github.io</a> · <a href="https://linkedin.com/in/mirnajmmoliveira">LinkedIn</a> · <a href="mailto:jmoraisbhz@gmail.com">jmoraisbhz@gmail.com</a></p>
+  <p style="margin-top:0.5rem;color:#444">Bootcamp Heineken · DIO · 2026 · Prova de conceito</p>
+</footer>
+
+</body>
+</html>
